@@ -1,4 +1,4 @@
-let items = [
+const initialItems = [
 	'Сделать проектную работу',
 	'Полить цветы',
 	'Пройти туториал по Реакту',
@@ -7,13 +7,15 @@ let items = [
 	'Помыть посуду',
 ]
 
+let items = initialItems
+
 const listElement = document.querySelector('.to-do__list')
 const formElement = document.querySelector('.to-do__form')
 const inputElement = document.querySelector('.to-do__input')
 
 function loadTasks() {
 	const savedTasks = localStorage.getItem('tasks')
-	return savedTasks ? JSON.parse(savedTasks) : items
+	return savedTasks ? JSON.parse(savedTasks) : initialItems
 }
 
 function createItem(item) {
@@ -47,8 +49,15 @@ function createItem(item) {
 		textElement.focus()
 	})
 
+	textElement.addEventListener('keydown', event => {
+		if (event.key === 'Enter') {
+			event.preventDefault()
+			textElement.blur()
+		}
+	})
+
 	textElement.addEventListener('blur', () => {
-		textElement.setAttribute('contenteditable', 'false')
+		textElement.removeAttribute('contenteditable')
 		const items = getTasksFromDOM()
 		saveTasks(items)
 	})
